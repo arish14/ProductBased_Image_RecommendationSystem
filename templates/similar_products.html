@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Similar Products</title>
+    <style>
+        .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+}
+
+.price {
+  color: grey;
+  font-size: 22px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+.suggestions{
+    display: flex;
+}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="{{ ip_row['ImageURL'].values[0] }}" alt="Product Image" style="height: 300px; width:300px">
+        <h1>{{ ip_row['ProductTitle'].values[0] }}</h1>
+        <p class="price">Price: {{ ip_row['price'].values[0] }}</p>
+        <p>Rating: {{ ip_row['rating'].values[0] }}</p>
+    </div>
+    <hr>
+    <h1>You may also like</h1>
+    <div class="suggestions">
+        {% for index, row in sim_rows.iterrows() %}
+        <div class="card">
+            <img src="{{ row['ImageURL'] }}" alt="Product Image" style="height: 250px; width:200px; border: 1px solid black;">
+            <h1>{{ row['ProductTitle'] }}</h1>
+            <p class="price">Price: {{ row['price'] }}</p>
+            <p>Rating: {{ row['rating'] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+
+</body>
+</html>

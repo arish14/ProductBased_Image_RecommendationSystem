@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
+
+<h2>Search Results</h2>
+
+<table id="myTable">
+  <tr class="header">
+    <th style="width:60%;">Product Title</th>
+    <th style="width:40%;">Price</th>
+    <th style="width:60%;">Rating</th>
+    <th style="width:40%;">Action</th>
+  </tr>
+  {% for _, row in results.iterrows() %}
+                <tr>
+                    <td>{{ row['ProductTitle'] }}</td>
+                    <td>{{ row['price'] }}</td>
+                    <td>{{ row['rating'] }}</td>
+                    <td>
+                        <form action="/recommend" method="POST">
+                            <input type="hidden" name="product_id" value="{{row['ProductId']}}" placeholder="Product ID">
+                            <input type="submit" name = "product_id" value="Open">
+                        </form>
+                    <!-- Add more table cells for other columns as needed -->
+                </tr>
+            {% endfor %}
+</table>
+
+
+</body>
+</html>

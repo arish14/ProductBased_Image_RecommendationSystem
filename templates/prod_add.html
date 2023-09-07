@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Form</title>
+</head>
+<body>
+    <h1>Product Form</h1>
+    <form action="/recommend" method="POST">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br><br>
+        
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="Apparel">Apparel</option>
+            <option value="Footwear">Footwear</option>
+        </select><br><br>
+        
+        <label for="subcategory">Subcategory:</label>
+        <select id="subcategory" name="subcategory">
+            <option value="Topwear">Topwear</option>
+            <option value="Bottomwear">Bottomwear</option>
+            <option value="Dress">Dress</option>
+            <option value="Innerwear">Innerwear</option>
+            <option value="Sandal">Sandal</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Socks">Socks</option>
+            <option value="Flip Flops">Flip Flops</option>
+            <option value="Apparel Set">Apparel Set</option>
+        </select><br><br>
+        
+        <label for="product_type">Product Type:</label>
+        <input type="text" id="product_type" name="product_type"><br><br>
+        
+        <label for="colour">Colour:</label>
+        <input type="text" id="colour" name="colour"><br><br>
+        
+        <label for="usage">Usage:</label>
+        <input type="text" id="usage" name="usage"><br><br>
+        
+        <label for="product_title">Product Title:</label>
+        <input type="text" id="product_title" name="product_title"><br><br>
+        
+        <label for="image_url">Image URL:</label>
+        <input type="text" id="image_url" name="image_url"><br><br>
+        
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price"><br><br>
+        
+        <label for="rating">Rating:</label>
+        <input type="text" id="rating" name="rating"><br><br>
+        
+        <label for="image">Image:</label>
+    <input type="file" id="image" name="image"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
