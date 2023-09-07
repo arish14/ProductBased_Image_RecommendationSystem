@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Verdana, sans-serif;
+    margin: 0;
+}
+
+.mySlides {
+    display: none;
+}
+
+img {
+    vertical-align: middle;
+    max-height: 300px; /* Adjust the maximum height as needed */
+    max-width: 100%; /* Adjust the maximum width as needed */
+}
+
+/* Slideshow container */
+.slideshow-container {
+    max-width: 800px; /* Adjust the maximum width as needed */
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: 20px; /* Add some bottom margin to create space */
+}
+
+/* Rest of the CSS styles for the slideshow */
+/* ... */
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+    .prev,
+    .next,
+    .text {
+        font-size: 11px;
+    }
+}
