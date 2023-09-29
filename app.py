@@ -25,7 +25,7 @@ def home():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        query = request.form.get('query', '')
+        query = request.form.get('search', '')
         escaped_query = re.escape(query)
         pattern = r'\b' + escaped_query + r'\b'
         #results = df[df['ProductTitle'].str.contains(query, case=False)]
