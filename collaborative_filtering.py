@@ -9,7 +9,7 @@ df = pd.read_csv("/Users/arishbhayani/Desktop/Capstone/data/New_DF.csv")
 # Define the rating scale
 reader = Reader(rating_scale=(0, 5))
 
-# Load the dataset from the DataFrame
+
 data = Dataset.load_from_df(df[['user_id', 'ProductId', 'rating']], reader)
 
 # Split the data into training and testing sets
@@ -28,7 +28,7 @@ mae = accuracy.mae(predictions)
 print(f'RMSE: {rmse}')
 print(f'MAE: {mae}')
 
-# Now, you can use the trained model to make recommendations for users.
+
 
 # User Input
 user_input1 = input("Enter the item id: ")
