@@ -4,7 +4,7 @@ import urllib
 import pandas as pd
 
 # Replace with your MongoDB Atlas connection string
-connection_string = "mongodb+srv://wine_review:" + urllib.parse.quote("NP9TU3sY64NbqSf1") + "@mongoproject.miuch.mongodb.net/"
+connection_string = "connection String"
 
 csv_file_path = "/Users/arishbhayani/Desktop/Capstone/data/New_DF.csv"
 
