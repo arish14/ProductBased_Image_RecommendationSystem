@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from tensorflow import keras
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
-from keras.layers import Dropout, Flatten, Dense
-from keras import applications
+#from tensorflow import keras
+#from keras.preprocessing.image import ImageDataGenerator
+#from keras.models import Sequential
+#from keras.layers import Dropout, Flatten, Dense
+#from keras import applications
 from sklearn.metrics import pairwise_distances
 import requests
 from PIL import Image
@@ -26,14 +26,14 @@ certifi.where()
 
 fashion_df = pd.read_csv("/Users/arishbhayani/Desktop/Capstone/data/New_DF.csv")
 
-boys_extracted_features = np.load('./Boys_ResNet_features.npy')
-boys_Productids = np.load('./Boys_ResNet_feature_product_ids.npy')
-girls_extracted_features = np.load('./Girls_ResNet_features.npy')
-girls_Productids = np.load('./Girls_ResNet_feature_product_ids.npy')
-men_extracted_features = np.load('./Men_ResNet_features.npy')
-men_Productids = np.load('./Men_ResNet_feature_product_ids.npy')
-women_extracted_features = np.load('./Women_ResNet_features.npy')
-women_Productids = np.load('./Women_ResNet_feature_product_ids.npy')
+boys_extracted_features = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Boys_ResNet_features.npy')
+boys_Productids = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Boys_ResNet_feature_product_ids.npy')
+girls_extracted_features = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Girls_ResNet_features.npy')
+girls_Productids = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Girls_ResNet_feature_product_ids.npy')
+men_extracted_features = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Men_ResNet_features.npy')
+men_Productids = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Men_ResNet_feature_product_ids.npy')
+women_extracted_features = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Women_ResNet_features.npy')
+women_Productids = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Women_ResNet_feature_product_ids.npy')
 fashion_df["ProductId"] = fashion_df["ProductId"].astype(str)
 
 def get_similar_products_cnn(product_id, num_results):
@@ -58,10 +58,20 @@ def get_similar_products_cnn(product_id, num_results):
     doc_id = np.where(Productids == product_id)[0][0]
     pairwise_dist = pairwise_distances(extracted_features, extracted_features[doc_id].reshape(1, -1))
     indices = np.argsort(pairwise_dist.flatten())[0:num_results]
-    #print("=" * 20, "input product details", "=" * 20)
+    
+    # Sort the indices based on 'rating' in descending order
+    sorted_indices = sorted(indices, key=lambda x: fashion_df['rating'].iloc[x], reverse=True)
+    
+    # Input product details
     ip_row = fashion_df[['ImageURL', 'ProductTitle', 'price', 'rating']].loc[
-        fashion_df['ProductId'] == Productids[indices[0]]]
+        fashion_df['ProductId'] == Productids[sorted_indices[0]]]
+    
+    # Similar products sorted by 'rating' and filter out products with a rating of 0
+    input_product_id = Productids[sorted_indices[0]]
     sim_rows = fashion_df[['ImageURL', 'ProductTitle', 'price', 'rating']].loc[
-        fashion_df['ProductId'].isin(list(np.array(Productids)[indices]))]
+        (fashion_df['ProductId'].isin(list(np.array(Productids)[sorted_indices]))) & 
+        (fashion_df['rating'] > 0) & 
+        (fashion_df['ProductId'] != input_product_id)]
+
     
     return ip_row, sim_rows
