@@ -12,7 +12,7 @@ import pymongo
 
 app = Flask(__name__)
 
-connection_string = "mongodb+srv://wine_review:" + urllib.parse.quote("NP9TU3sY64NbqSf1") + "@mongoproject.miuch.mongodb.net/"
+connection_string = "Connection String"
 
 
 collection_name = "Product"
