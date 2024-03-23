@@ -1,61 +1,106 @@
+<!-- search_results.html -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    :root {
+      --surface-color: #fff;
+      --curve: 40;
+    }
 
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #fef8f8;
+      margin: 0;
+      padding: 0;
+    }
 
+    header {
+      background-color: #6A515E;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
 
-#myTable {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ddd;
-  font-size: 18px;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      border-radius: var(--curve) * 1px;
+    }
 
-#myTable th, #myTable td {
-  text-align: left;
-  padding: 12px;
-}
+    th, td {
+      padding: 1em;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
 
-#myTable tr {
-  border-bottom: 1px solid #ddd;
-}
+    th {
+      background-color: #6A515E;
+      color: #fff;
+    }
 
-#myTable tr.header, #myTable tr:hover {
-  background-color: #f1f1f1;
-}
-</style>
+    tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    form {
+      margin: 0;
+      padding: 0;
+      display: inline;
+    }
+
+    button.card__link {
+      background: none;
+      border: none;
+      color: #6A515E;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    img {
+      width: 100px;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    /* Your existing styles here */
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Display</title>
 </head>
 <body>
-
-<h2>Search Results</h2>
-
-<table id="myTable">
-  <tr class="header">
-    <th style="width:60%;">Product Title</th>
-    <th style="width:40%;">Price</th>
-    <th style="width:60%;">Rating</th>
-    <th style="width:40%;">Action</th>
-  </tr>
-  {% for _, row in results.iterrows() %}
-                <tr>
-                    <td>{{ row['ProductTitle'] }}</td>
-                    <td>{{ row['price'] }}</td>
-                    <td>{{ row['rating'] }}</td>
-                    <td>
-                        <form action="/recommend" method="POST">
-                            <input type="hidden" name="product_id" value="{{row['ProductId']}}" placeholder="Product ID">
-                            <input type="submit" name = "product_id" value="Open">
-                        </form>
-                    <!-- Add more table cells for other columns as needed -->
-                </tr>
-            {% endfor %}
-</table>
-
-
+  <header>
+    <h1>Search Results</h1>
+  </header>
+  <table>
+    <thead>
+      <tr>
+        <th>Product ID</th>
+        <th>Product Title</th>
+        <th>Image</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in results %}
+        <tr>
+          <td>{{ row['ProductId'] }}</td>
+          <td>
+            <form action="/recommend" method="POST">
+              <input type="hidden" name="product_id" value="{{ row['ProductId'] }}">
+              <button type="submit" class="card__link">{{ row['ProductTitle'] }}</button>
+            </form>
+          </td>
+          <td><img src="{{ row['ImageURL'] }}" alt="" /></td>
+          <td>${{ row['price'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </body>
 </html>
