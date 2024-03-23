@@ -20,6 +20,7 @@ import urllib3
 urllib3.disable_warnings()
 import certifi
 import ssl
+from sklearn.metrics.pairwise import cosine_similarity
 
 ssl._create_default_https_context = ssl._create_unverified_context
 certifi.where()
@@ -36,42 +37,58 @@ women_extracted_features = np.load('/Users/arishbhayani/Desktop/Capstone/Website
 women_Productids = np.load('/Users/arishbhayani/Desktop/Capstone/Website/Model Features/Women_ResNet_feature_product_ids.npy')
 fashion_df["ProductId"] = fashion_df["ProductId"].astype(str)
 
-def get_similar_products_cnn(product_id, num_results):
+def get_similar_products_cnn(product_id, num_results=5):
+    # Ensure product_id exists in the dataset
+    if product_id not in fashion_df['ProductId'].values:
+        raise ValueError(f"Product ID {product_id} not found in the dataset.")
+
+    # Initialize Productids
     Productids = []
-    if fashion_df[fashion_df['ProductId'] == product_id]['Gender'].values[0] == "Boys":
+
+    # Determine the gender and set extracted features accordingly
+    gender = fashion_df[fashion_df['ProductId'] == product_id]['Gender'].values[0]
+    if gender == "Boys":
         extracted_features = boys_extracted_features
         Productids = boys_Productids
-    elif fashion_df[fashion_df['ProductId'] == product_id]['Gender'].values[0] == "Girls":
+    elif gender == "Girls":
         extracted_features = girls_extracted_features
         Productids = girls_Productids
-    elif fashion_df[fashion_df['ProductId'] == product_id]['Gender'].values[0] == "Men":
+    elif gender == "Men":
         extracted_features = men_extracted_features
         Productids = men_Productids
-    elif fashion_df[fashion_df['ProductId'] == product_id]['Gender'].values[0] == "Women":
+    elif gender == "Women":
         extracted_features = women_extracted_features
         Productids = women_Productids
-    
+
+    # Default value in case no condition matches
     if len(Productids) == 0:
-        # Default value in case no condition matches
         Productids = []
-    
+
+    # Find the index of the input product
     doc_id = np.where(Productids == product_id)[0][0]
-    pairwise_dist = pairwise_distances(extracted_features, extracted_features[doc_id].reshape(1, -1))
-    indices = np.argsort(pairwise_dist.flatten())[0:num_results]
-    
-    # Sort the indices based on 'rating' in descending order
-    sorted_indices = sorted(indices, key=lambda x: fashion_df['rating'].iloc[x], reverse=True)
-    
+
+    # Calculate cosine similarity
+    similarity_scores = cosine_similarity(extracted_features, extracted_features[doc_id].reshape(1, -1))
+
+    # Get indices of the most similar products
+    indices = np.argsort(similarity_scores.flatten())[::-1][:num_results]
+
+    # Remove the index of the input product from the indices
+    input_product_index = np.where(Productids == product_id)[0][0]
+    indices = np.delete(indices, np.where(indices == input_product_index))
+
     # Input product details
     ip_row = fashion_df[['ImageURL', 'ProductTitle', 'price', 'rating']].loc[
-        fashion_df['ProductId'] == Productids[sorted_indices[0]]]
-    
+        fashion_df['ProductId'] == Productids[indices[0]]]
+
     # Similar products sorted by 'rating' and filter out products with a rating of 0
-    input_product_id = Productids[sorted_indices[0]]
+    input_product_id = Productids[indices[0]]
     sim_rows = fashion_df[['ImageURL', 'ProductTitle', 'price', 'rating']].loc[
-        (fashion_df['ProductId'].isin(list(np.array(Productids)[sorted_indices]))) & 
-        (fashion_df['rating'] > 0) & 
+        (fashion_df['ProductId'].isin(list(np.array(Productids)[indices]))) &
+        (fashion_df['rating'] > 0) &
         (fashion_df['ProductId'] != input_product_id)]
 
-    
-    return ip_row, sim_rows
+    # Get similarity scores for similar products
+    similarity_scores = similarity_scores.flatten()[indices]
+
+    return ip_row, sim_rows, similarity_scores
